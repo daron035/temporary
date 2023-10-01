@@ -1,0 +1,58 @@
+###BUILDER###
+FROM python:3.10-alpine AS builder
+
+WORKDIR /app
+
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV PYTHONUNBUFFERED 1
+
+RUN apk update \
+    && apk add postgresql postgresql-dev gcc python3-dev musl-dev zlib jpeg-dev libjpeg freetype-dev \
+    fribidi-dev \
+    harfbuzz-dev \
+    jpeg-dev \
+    lcms2-dev \
+    openjpeg-dev \
+    tcl-dev \
+    tiff-dev \
+    tk-dev \
+    zlib-dev
+
+RUN pip install --upgrade pip
+
+ADD ./backend/requirements.txt /app/backend/
+
+RUN pip wheel --no-cache-dir --no-deps \
+    --wheel-dir /user/src/app/wheels \
+    -r backend/requirements.txt
+
+
+###FINAL###
+
+FROM python:3.10-alpine
+
+RUN mkdir -p /app
+
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+
+ENV HOME=/app
+ENV APP_HOME=/app/web
+RUN mkdir $APP_HOME
+WORKDIR $APP_HOME
+
+RUN apk update && apk add libpq
+COPY --from=builder /usr/src/app/wheels /wheels
+COPY --from=builder /app/backend/requirements.txt .
+RUN pip install --no-cache /wheels/*
+
+COPY ./entrypoint.sh $APP_HOME
+
+COPY . $APP_HOME
+
+# https://phoenixnap.com/kb/linux-chown-command-with-examples
+RUN chown -R appuser:appgroup $APP_HOME 
+
+USER appuser
+RUN chmod +x /app/web/entrypoint.sh
+
+ENTRYPOINT ["/app/web/entrypoint.sh"]
