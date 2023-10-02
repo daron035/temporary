@@ -20,7 +20,7 @@ interface CreateUserResponse {
 const authApiSlice = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     retrieveUser: builder.query<User, void>({
-      query: () => "/users/me/",
+      query: () => "auth/users/me/",
     }),
     socialAuthenticate: builder.mutation<CreateUserResponse, SocialAuthArgs>({
       query: ({ provider, state, code }) => ({
