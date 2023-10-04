@@ -10,8 +10,10 @@ services:
     entrypoint: /app/docker/backend/wsgi-entrypoint.sh
     volumes:
       - .:/app
-      - static_volume:/app/backend/server/django_static
-      - media_volume:/app/backend/server/media
+      # - static_volume:/app/backend/server/django_static
+      - static_volume:/home/app/web/django_static
+      # - media_volume:/app/backend/server/media
+      - media_volume:/home/app/web/media
     expose:
       - 8000
   frontend:
@@ -33,8 +35,10 @@ services:
     ports:
       - 80:80
     volumes:
-      - static_volume:/app/backend/server/django_static
-      - media_volume:/app/backend/server/media
+      # - static_volume:/app/backend/server/django_static
+      - static_volume:/home/app/web/django_static
+      # - media_volume:/app/backend/server/media
+      - media_volume:/home/app/web/media
       # - ./docker/nginx/development:/etc/nginx/conf.d
     depends_on:
       - backend

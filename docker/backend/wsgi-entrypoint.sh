@@ -1,6 +1,6 @@
 #!/bin/sh
 
-until cd /app/backend/server
+until cd /home/app/web/server
 do
     echo "Waiting for server volume..."
 done

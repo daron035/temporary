@@ -1,5 +1,6 @@
 from datetime import timedelta
 from os import getenv, path
+import os
 from pathlib import Path
 from django.core.management.utils import get_random_secret_key
 import dotenv
@@ -122,6 +123,7 @@ USE_TZ = True
 
 STATIC_URL = "django_static/"
 STATIC_ROOT = BASE_DIR / "django_static"
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "build/static/")]
 
 MEDIA_URL = "media/"
 MEDIA_ROOT = BASE_DIR / "media"
