@@ -23,7 +23,7 @@ COPY . /usr/src/app/
 RUN flake8 --ignore=E501,F401 .
 
 # install python dependencies
-COPY ./requirements.txt .
+COPY backend/requirements.txt .
 RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r requirements.txt
 
 
@@ -54,9 +54,9 @@ RUN pip install --upgrade pip
 RUN pip install --no-cache /wheels/*
 
 # copy entrypoint.prod.sh
-COPY ./entrypoint.prod.sh .
-RUN sed -i 's/\r$//g'  $APP_HOME/entrypoint.prod.sh
-RUN chmod +x  $APP_HOME/entrypoint.prod.sh
+# COPY ./entrypoint.prod.sh .
+# RUN sed -i 's/\r$//g'  $APP_HOME/entrypoint.prod.sh
+# RUN chmod +x  $APP_HOME/entrypoint.prod.sh
 
 # copy project
 COPY backend/server $APP_HOME
